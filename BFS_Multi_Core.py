@@ -35,6 +35,7 @@ Your solution should produce the words that make up the shortest path itself, no
 class BFS_Multi_Core:
     class Node:
 
+        '''Object used as holder for heap'''
         def __init__(self, word, previous):
             self.word = word
             self.previous = previous
@@ -67,6 +68,10 @@ class BFS_Multi_Core:
         self.end = end
 
     def get_words(self, size=5):
+        '''
+        Precondition: size is valid word size
+        Postcondition: all words of size from words.txt file as list
+        '''
         all_words = [w.strip().lower() for w in open('words.txt')]
 
         # print('total words: ' , len(all_words))
@@ -83,6 +88,10 @@ class BFS_Multi_Core:
 
 
     def generate_neighbors(self,words):
+        '''
+        Precondition: words must contain only words with same length
+        Postcondition: return defaultdict(list) with all neighbors for each word
+        '''
         holder = object()
         match = defaultdict(list)
         neighbors = defaultdict(list)
@@ -96,6 +105,10 @@ class BFS_Multi_Core:
         return neighbors
 
     def reconstruct_path(self, node):
+        '''
+        Precondition: path from node -> None
+        Postcondition: string with each of the steps in the path.
+        '''
         self.completed_graph = True
         path = [node.word]
         while node.previous != None:
@@ -110,6 +123,10 @@ class BFS_Multi_Core:
 
 
     def search_for_path(self, q, queueSet, closedSet):
+        '''
+        Precondition: start, end, words are all valid with any len(words[i]) == len(start) and len(end)
+        Postcondition: either the path from start to end or No way found!
+        '''
         # print('inside search_for_path pid: %s  ppid: %s' %(os.getpid(), os.getppid()))
         if(not self.completed_graph):
             subtree = q.get()
@@ -144,12 +161,12 @@ class BFS_Multi_Core:
         return (a,b,c)
 
 
-    def breadth_first_search(self, s=None, e=None, w=None):
-    #start: teems end: cress ladder: teems teens teeny teety teaty teasy trasy trass crass cress
-        if s != None and e != None and w != None:
-            start = s
-            end = e
-            words = w
+    def breadth_first_search(self, start, end, words):
+        #start: teems end: cress ladder: teems teens teeny teety teaty teasy trasy trass crass cress
+        '''
+        Precondition: size is valid word size
+        Postcondition: all words of size from words.txt file as list
+        '''
 
         queueSet = set()
         closedSet = set()
@@ -172,16 +189,32 @@ class BFS_Multi_Core:
         return msg
 
     def time_breadth_first(self, start, end, words):
+        '''
+        Precondition: start, end, words are valid
+        Postcondition: return ladder for a_star_search on start, end, with words
+        '''
         print('start: %s end: %s ladder: %s' %(start, end, self.breadth_first_search(start, end, words)))
 
     def test_time_searches(self):
+        '''
+        Precondition: None
+        Postcondition: the time to run the A*
+        '''
         print(timeit(lambda:print(self.time_breadth_first(self.words[random.randint(1,len(self.words))], self.words[random.randint(1,len(self.words))], self.words)), number=1))
 
     def runTests(self):
+        '''
+        Precondition: None
+        Postcondition: Profile a_star_search()
+        '''
         profile.runctx('self.test_time_searches()', globals(), locals())
 
 
     def test(self, start, end):
+        '''
+        Precondition: valid start and end which are same size as all( words(i))
+        Postcondition: test A* with start and end
+        '''
         self.start = start
         self.end = end
         # self.words = words

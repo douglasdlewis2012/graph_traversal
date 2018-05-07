@@ -35,7 +35,7 @@ class BFS:
         print('initializing')
 
     class Node:
-
+        '''Object used as holder for queue'''
         def __init__(self, word, previous):
             self.word = word
             self.previous = previous
@@ -44,6 +44,10 @@ class BFS:
             return self.f < other.f
 
     def generate_neighbors(self,words):
+        '''
+        Precondition: words must contain only words with same length
+        Postcondition: return defaultdict(list) with all neighbors for each word
+        '''
         holder = object()
         match = defaultdict(list)
         neighbors = defaultdict(list)
@@ -57,6 +61,10 @@ class BFS:
         return neighbors
 
     def reconstruct_path(self, node):
+        '''
+        Precondition: path from node -> None
+        Postcondition: string with each of the steps in the path.
+        '''
         path = [node.word]
         while node.previous != None:
             temp = node.previous
@@ -68,8 +76,11 @@ class BFS:
         return ' '.join(p)
 
     def breadth_first_search(self, start, end, words):
-
-    #start: teems end: cress ladder: teems teens teeny teety teaty teasy trasy trass crass cress
+        '''
+        Precondition: start, end, words are all valid with any len(words[i]) == len(start) and len(end)
+        Postcondition: either the path from start to end or No way found!
+        '''
+        #start: teems end: cress ladder: teems teens teeny teety teaty teasy trasy trass crass cress
         neighbors = self.generate_neighbors(words)
         q = Queue()
         queueSet = set()
@@ -104,6 +115,10 @@ class BFS:
 
 
     def get_words(self, size=5):
+        '''
+        Precondition: size is valid word size
+        Postcondition: all words of size from words.txt file as list
+        '''
         all_words = [w.strip().lower() for w in open('words.txt')]
 
         print('total words: ' , len(all_words))
@@ -119,6 +134,10 @@ class BFS:
         return sized_words
 
     def time_breadth_first(self, start, end, words):
+        '''
+        Precondition: None
+        Postcondition: the time to run the BFS
+        '''
         print('start: %s end: %s ladder: %s' %(start, end, self.breadth_first_search(start, end, words)))
 
 
@@ -130,9 +149,17 @@ class BFS:
         print(timeit(lambda:print(self.time_breadth_first(start, end, words)), number=1))
 
     def runTests(self):
+        '''
+        Precondition: None
+        Postcondition: Profile a_star_search()
+        '''
         profile.runctx('self.test_time_searches()', globals(), locals())
 
     def test(self, start, end):
+        '''
+        Precondition: valid start and end which are same size as all( words(i))
+        Postcondition: test A* with start and end
+        '''
         self.start = start
         self.end = end
         words = self.get_words()
