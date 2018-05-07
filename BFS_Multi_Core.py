@@ -113,12 +113,7 @@ class BFS_Multi_Core:
         # print('inside search_for_path pid: %s  ppid: %s' %(os.getpid(), os.getppid()))
         if(not self.completed_graph):
             subtree = q.get()
-            # print('subtree: ', subtree)
 
-            if subtree.word == self.end:
-                print('FINISHED!!!!!!!!!' * 5)
-
-                return self.reconstruct_path(subtree)
 
             for child in self.neighbors[subtree.word]:
                 for c in child:
@@ -127,6 +122,13 @@ class BFS_Multi_Core:
 
 
                     if c not in queueSet:
+
+                        if c == self.end:
+                            print('FINISHED!!!!!!!!!' * 5)
+                            endNode = BFS_Multi_Core.Node(c,subtree)
+                            return self.reconstruct_path(endNode)
+
+
                         q.put(BFS_Multi_Core.Node(c,subtree))
                         queueSet.add(c)
 
